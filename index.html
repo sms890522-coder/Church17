@@ -1,1 +1,1186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>순례길교회 | Pilgrim Way Church</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
 
+  <style>
+    :root{
+      --bg:#120f0a;
+      --paper:#efe2c8;
+      --paper2:#f8efdc;
+      --ink:#1b1710;
+      --muted:#766b5b;
+      --brown:#5b3923;
+      --rust:#b65f38;
+      --olive:#697044;
+      --gold:#d8ad61;
+      --line:rgba(27,23,16,.18);
+      --white-line:rgba(248,239,220,.18);
+      --shadow:0 28px 90px rgba(24,18,9,.28);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Pretendard,system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 12% 3%,rgba(216,173,97,.24),transparent 30%),
+        radial-gradient(circle at 88% 8%,rgba(105,112,68,.22),transparent 28%),
+        linear-gradient(180deg,#1b150e 0%,#2a1d12 42%,#efe2c8 42%,#efe2c8 100%);
+      overflow-x:hidden;
+    }
+
+    a{text-decoration:none;color:inherit}
+    button{font-family:inherit}
+
+    .texture{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.07;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 260 260' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.62' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .brand-stamp{
+      position:fixed;
+      top:24px;
+      left:28px;
+      z-index:90;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px 16px 12px 12px;
+      border-radius:999px;
+      border:1px solid rgba(248,239,220,.22);
+      background:rgba(27,21,14,.62);
+      backdrop-filter:blur(20px);
+      color:var(--paper2);
+      box-shadow:0 18px 60px rgba(0,0,0,.26);
+    }
+
+    .brand-mark{
+      width:46px;
+      height:46px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      color:#1b150e;
+      background:linear-gradient(135deg,var(--gold),#f4d99e);
+      font-weight:950;
+      box-shadow:0 0 34px rgba(216,173,97,.25);
+    }
+
+    .brand-stamp b{
+      display:block;
+      font-size:21px;
+      letter-spacing:-.065em;
+      line-height:1;
+    }
+
+    .brand-stamp span{
+      display:block;
+      margin-top:4px;
+      color:#d9c8a6;
+      font-size:10px;
+      letter-spacing:.16em;
+      font-weight:950;
+    }
+
+    .chapter-menu{
+      position:fixed;
+      right:24px;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:88;
+      display:grid;
+      gap:12px;
+    }
+
+    .chapter-menu a{
+      position:relative;
+      width:54px;
+      height:54px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(248,239,220,.25);
+      background:rgba(27,21,14,.58);
+      backdrop-filter:blur(18px);
+      color:var(--paper2);
+      font-weight:950;
+      font-size:13px;
+      transition:.24s ease;
+      box-shadow:0 12px 38px rgba(0,0,0,.2);
+    }
+
+    .chapter-menu a:hover,
+    .chapter-menu a.active{
+      background:var(--gold);
+      color:#1b150e;
+      transform:translateX(-6px) scale(1.08);
+    }
+
+    .chapter-menu a::before{
+      content:attr(data-label);
+      position:absolute;
+      right:64px;
+      white-space:nowrap;
+      padding:9px 12px;
+      border-radius:999px;
+      background:#1b150e;
+      color:var(--paper2);
+      opacity:0;
+      pointer-events:none;
+      transform:translateX(10px);
+      transition:.22s ease;
+      font-size:13px;
+      box-shadow:0 12px 35px rgba(0,0,0,.24);
+    }
+
+    .chapter-menu a:hover::before,
+    .chapter-menu a.active::before{
+      opacity:1;
+      transform:translateX(0);
+    }
+
+    .mobile-menu-btn{
+      display:none;
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      z-index:100;
+      border:0;
+      border-radius:999px;
+      padding:15px 18px;
+      color:#1b150e;
+      background:var(--gold);
+      font-weight:950;
+      box-shadow:0 18px 50px rgba(0,0,0,.28);
+      cursor:pointer;
+    }
+
+    .mobile-menu{
+      display:none;
+      position:fixed;
+      inset:0;
+      z-index:120;
+      padding:22px;
+      background:
+        radial-gradient(circle at 20% 5%,rgba(216,173,97,.18),transparent 32%),
+        rgba(18,15,10,.96);
+      backdrop-filter:blur(20px);
+      color:var(--paper2);
+    }
+
+    .mobile-menu.open{display:block}
+
+    .mobile-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .close-btn{
+      border:1px solid rgba(248,239,220,.22);
+      border-radius:999px;
+      background:rgba(248,239,220,.08);
+      color:var(--paper2);
+      padding:12px 16px;
+      font-weight:950;
+      cursor:pointer;
+    }
+
+    .mobile-list{
+      margin-top:52px;
+      display:grid;
+      gap:12px;
+    }
+
+    .mobile-list a{
+      display:grid;
+      grid-template-columns:64px 1fr;
+      align-items:center;
+      padding:20px;
+      border:1px solid rgba(248,239,220,.18);
+      border-radius:28px;
+      background:rgba(248,239,220,.07);
+    }
+
+    .mobile-list b{
+      color:var(--gold);
+      font-size:19px;
+    }
+
+    .mobile-list span{
+      font-size:27px;
+      letter-spacing:-.07em;
+      font-weight:950;
+    }
+
+    .wrap{
+      position:relative;
+      z-index:1;
+      width:min(1220px,calc(100% - 34px));
+      margin:0 auto;
+    }
+
+    .hero{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:.88fr 1.12fr;
+      gap:26px;
+      align-items:end;
+      padding:138px 0 74px;
+      color:var(--paper2);
+    }
+
+    .hero-copy{
+      padding-bottom:40px;
+    }
+
+    .badge{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      width:fit-content;
+      padding:10px 15px;
+      border-radius:999px;
+      border:1px solid rgba(248,239,220,.22);
+      background:rgba(248,239,220,.08);
+      color:#ecd8af;
+      font-size:13px;
+      letter-spacing:.13em;
+      font-weight:950;
+    }
+
+    .badge::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      background:var(--gold);
+      box-shadow:0 0 0 7px rgba(216,173,97,.12);
+    }
+
+    h1{
+      margin:28px 0 24px;
+      font-size:clamp(56px,9vw,124px);
+      line-height:.85;
+      letter-spacing:-.115em;
+      font-weight:950;
+    }
+
+    .hero-copy p{
+      max-width:620px;
+      margin:0;
+      color:#d5c4a4;
+      font-size:19px;
+      line-height:1.88;
+      letter-spacing:-.025em;
+      font-weight:520;
+    }
+
+    .actions{
+      margin-top:34px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      padding:16px 22px;
+      border-radius:999px;
+      font-weight:950;
+      border:1px solid rgba(248,239,220,.22);
+      background:rgba(248,239,220,.08);
+      color:var(--paper2);
+      transition:.23s ease;
+    }
+
+    .btn.primary{
+      background:var(--gold);
+      color:#1b150e;
+      border:0;
+      box-shadow:0 18px 44px rgba(216,173,97,.18);
+    }
+
+    .btn:hover{transform:translateY(-4px)}
+
+    .map-card{
+      min-height:680px;
+      position:relative;
+      overflow:hidden;
+      border-radius:42px;
+      border:1px solid rgba(248,239,220,.18);
+      background:
+        linear-gradient(180deg,rgba(18,15,10,.08),rgba(18,15,10,.72)),
+        url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1500&q=80") center/cover;
+      box-shadow:0 34px 110px rgba(0,0,0,.35);
+    }
+
+    .map-card::before{
+      content:"";
+      position:absolute;
+      inset:32px;
+      border:1px solid rgba(248,239,220,.22);
+      border-radius:32px;
+      pointer-events:none;
+    }
+
+    .path-line{
+      position:absolute;
+      left:12%;
+      top:16%;
+      width:76%;
+      height:72%;
+      background:
+        radial-gradient(circle at 5% 15%,var(--gold) 0 5px,transparent 6px),
+        radial-gradient(circle at 42% 38%,var(--gold) 0 5px,transparent 6px),
+        radial-gradient(circle at 65% 70%,var(--gold) 0 5px,transparent 6px),
+        radial-gradient(circle at 91% 84%,var(--gold) 0 5px,transparent 6px);
+      opacity:.95;
+    }
+
+    .path-line svg{
+      width:100%;
+      height:100%;
+      overflow:visible;
+      filter:drop-shadow(0 0 12px rgba(216,173,97,.65));
+    }
+
+    .route-card{
+      position:absolute;
+      left:32px;
+      right:32px;
+      bottom:32px;
+      padding:26px;
+      border-radius:30px;
+      border:1px solid rgba(248,239,220,.2);
+      background:rgba(18,15,10,.72);
+      backdrop-filter:blur(18px);
+    }
+
+    .route-card small{
+      color:var(--gold);
+      letter-spacing:.14em;
+      font-weight:950;
+      font-size:12px;
+    }
+
+    .route-card h2{
+      margin:14px 0 8px;
+      color:var(--paper2);
+      font-size:38px;
+      letter-spacing:-.08em;
+      line-height:1;
+    }
+
+    .route-card p{
+      margin:0;
+      color:#d2c0a0;
+      line-height:1.7;
+    }
+
+    .section{
+      padding:98px 0;
+      scroll-margin-top:70px;
+    }
+
+    .paper-section{
+      background:var(--paper);
+      margin-left:calc((100vw - min(1220px,calc(100vw - 34px))) / -2);
+      margin-right:calc((100vw - min(1220px,calc(100vw - 34px))) / -2);
+      padding-left:calc((100vw - min(1220px,calc(100vw - 34px))) / 2);
+      padding-right:calc((100vw - min(1220px,calc(100vw - 34px))) / 2);
+    }
+
+    .section-head{
+      display:grid;
+      grid-template-columns:.78fr 1.22fr;
+      gap:38px;
+      align-items:end;
+      margin-bottom:36px;
+    }
+
+    .eyebrow{
+      color:var(--rust);
+      font-size:13px;
+      letter-spacing:.15em;
+      font-weight:950;
+    }
+
+    h2{
+      margin:9px 0 0;
+      font-size:clamp(38px,5.8vw,74px);
+      line-height:.92;
+      letter-spacing:-.095em;
+    }
+
+    .lead{
+      margin:0;
+      color:var(--muted);
+      line-height:1.86;
+      font-size:17px;
+      font-weight:520;
+    }
+
+    .journey-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:16px;
+    }
+
+    .journey-card{
+      min-height:360px;
+      position:relative;
+      padding:30px;
+      border-radius:34px;
+      background:var(--paper2);
+      border:1px solid var(--line);
+      box-shadow:0 16px 50px rgba(24,18,9,.08);
+      overflow:hidden;
+      transition:.24s ease;
+    }
+
+    .journey-card:hover{
+      transform:translateY(-7px);
+      box-shadow:var(--shadow);
+    }
+
+    .journey-card::after{
+      content:"";
+      position:absolute;
+      right:-60px;
+      bottom:-60px;
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      background:rgba(105,112,68,.16);
+    }
+
+    .journey-card span{
+      display:block;
+      color:var(--rust);
+      font-weight:950;
+      letter-spacing:.12em;
+      font-size:13px;
+    }
+
+    .journey-card h3{
+      margin:94px 0 13px;
+      font-size:30px;
+      line-height:1.02;
+      letter-spacing:-.075em;
+    }
+
+    .journey-card p{
+      position:relative;
+      z-index:1;
+      color:var(--muted);
+      line-height:1.76;
+      margin:0;
+    }
+
+    .passport{
+      display:grid;
+      grid-template-columns:.95fr 1.05fr;
+      gap:24px;
+      align-items:stretch;
+    }
+
+    .passport-photo{
+      min-height:620px;
+      border-radius:36px;
+      background:
+        linear-gradient(180deg,rgba(27,23,16,.02),rgba(27,23,16,.34)),
+        url("https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1400&q=80") center/cover;
+      box-shadow:var(--shadow);
+    }
+
+    .passport-book{
+      min-height:620px;
+      border-radius:36px;
+      background:var(--paper2);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      display:grid;
+      grid-template-rows:auto 1fr;
+      overflow:hidden;
+    }
+
+    .passport-top{
+      padding:28px 34px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px dashed rgba(27,23,16,.22);
+      background:rgba(216,173,97,.13);
+    }
+
+    .passport-top b{
+      font-size:24px;
+      letter-spacing:-.06em;
+    }
+
+    .passport-top span{
+      color:var(--rust);
+      font-weight:950;
+      letter-spacing:.1em;
+      font-size:12px;
+    }
+
+    .passport-pages{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+    }
+
+    .passport-page{
+      padding:34px;
+      border-right:1px dashed rgba(27,23,16,.22);
+    }
+
+    .passport-page:last-child{border-right:0}
+
+    .passport-page h3{
+      margin:0 0 18px;
+      font-size:34px;
+      line-height:1;
+      letter-spacing:-.08em;
+    }
+
+    .passport-page p{
+      color:var(--muted);
+      line-height:1.82;
+      font-size:17px;
+    }
+
+    .stamp-list{
+      display:grid;
+      gap:12px;
+      margin-top:24px;
+    }
+
+    .stamp{
+      padding:15px;
+      border:2px solid rgba(182,95,56,.42);
+      border-radius:18px;
+      color:var(--rust);
+      font-weight:950;
+      transform:rotate(-1deg);
+    }
+
+    .pastor{
+      display:grid;
+      grid-template-columns:.85fr 1.15fr;
+      gap:24px;
+      align-items:center;
+    }
+
+    .pastor-img{
+      min-height:600px;
+      border-radius:50% 50% 34px 34px;
+      background:
+        linear-gradient(180deg,rgba(27,23,16,.03),rgba(27,23,16,.28)),
+        url("https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?auto=format&fit=crop&w=1000&q=80") center/cover;
+      box-shadow:var(--shadow);
+    }
+
+    .pastor-copy{
+      padding:46px;
+      border-radius:36px;
+      background:var(--paper2);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+
+    .quote{
+      margin:0 0 24px;
+      font-size:clamp(34px,5vw,68px);
+      line-height:1.04;
+      letter-spacing:-.09em;
+    }
+
+    .pastor-copy p{
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.9;
+    }
+
+    .sign{
+      margin-top:26px;
+      color:var(--rust);
+      font-size:24px;
+      font-weight:950;
+    }
+
+    .schedule{
+      border-radius:36px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:var(--paper2);
+      box-shadow:var(--shadow);
+    }
+
+    .schedule-row{
+      display:grid;
+      grid-template-columns:150px 1fr 210px;
+      border-bottom:1px solid var(--line);
+      align-items:center;
+    }
+
+    .schedule-row:last-child{border-bottom:0}
+
+    .schedule-row > div{
+      padding:26px 30px;
+      border-right:1px solid var(--line);
+    }
+
+    .schedule-row > div:last-child{border-right:0}
+
+    .day{
+      color:var(--rust);
+      font-size:23px;
+      font-weight:950;
+    }
+
+    .name{
+      font-size:29px;
+      letter-spacing:-.065em;
+      font-weight:950;
+    }
+
+    .time{
+      color:var(--olive);
+      text-align:right;
+      font-size:20px;
+      font-weight:950;
+    }
+
+    .media-grid{
+      display:grid;
+      grid-template-columns:1.32fr .68fr;
+      gap:20px;
+    }
+
+    .youtube{
+      aspect-ratio:16/9;
+      border-radius:34px;
+      overflow:hidden;
+      background:#111;
+      box-shadow:var(--shadow);
+    }
+
+    .youtube iframe{width:100%;height:100%;border:0}
+
+    .notice-list{
+      display:grid;
+      gap:12px;
+    }
+
+    .notice{
+      display:block;
+      padding:21px;
+      border-radius:26px;
+      background:var(--paper2);
+      border:1px solid var(--line);
+      transition:.22s ease;
+    }
+
+    .notice:hover{
+      transform:translateY(-5px);
+      box-shadow:0 16px 45px rgba(24,18,9,.09);
+    }
+
+    .notice b{
+      display:block;
+      margin-bottom:8px;
+      font-size:20px;
+      letter-spacing:-.05em;
+    }
+
+    .notice span{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .location-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:20px;
+    }
+
+    .map{
+      min-height:450px;
+      border-radius:34px;
+      overflow:hidden;
+      background:#ddd;
+      box-shadow:var(--shadow);
+    }
+
+    .map iframe{width:100%;height:100%;border:0}
+
+    .contact-card{
+      padding:36px;
+      border-radius:34px;
+      background:var(--brown);
+      color:var(--paper2);
+      box-shadow:var(--shadow);
+    }
+
+    .contact-card h3{
+      margin:0 0 18px;
+      font-size:40px;
+      line-height:.98;
+      letter-spacing:-.08em;
+    }
+
+    .contact-card p{
+      color:#d7c8aa;
+      line-height:1.82;
+    }
+
+    .contact-card .btn{
+      color:var(--paper2);
+    }
+
+    .contact-card .btn.primary{
+      color:#1b150e;
+    }
+
+    footer{
+      padding:54px 18px;
+      text-align:center;
+      background:#1b150e;
+      color:#cdbb9b;
+      line-height:1.7;
+      margin-left:calc((100vw - min(1220px,calc(100vw - 34px))) / -2);
+      margin-right:calc((100vw - min(1220px,calc(100vw - 34px))) / -2);
+    }
+
+    footer b{
+      color:var(--paper2);
+      font-size:22px;
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(24px);
+      transition:.72s ease;
+    }
+
+    .reveal.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    @media(max-width:1050px){
+      .chapter-menu{display:none}
+      .mobile-menu-btn{display:block}
+      .brand-stamp{top:14px;left:14px}
+
+      .hero,
+      .section-head,
+      .passport,
+      .pastor,
+      .media-grid,
+      .location-grid{
+        grid-template-columns:1fr;
+      }
+
+      .map-card{min-height:560px}
+      .journey-grid{grid-template-columns:1fr}
+      .passport-photo,.passport-book{min-height:auto}
+      .passport-photo{min-height:420px}
+      .pastor-img{min-height:480px}
+    }
+
+    @media(max-width:680px){
+      .brand-stamp{
+        padding:9px 12px 9px 9px;
+      }
+
+      .brand-mark{width:40px;height:40px}
+      .brand-stamp b{font-size:18px}
+      .brand-stamp span{font-size:8px}
+      .wrap{width:calc(100% - 22px)}
+
+      .hero{padding:118px 0 56px}
+      h1{font-size:56px}
+      h2{font-size:42px}
+      .hero-copy p,.lead{font-size:16px}
+
+      .map-card{min-height:520px;border-radius:32px}
+      .map-card::before{inset:18px;border-radius:24px}
+      .route-card{left:18px;right:18px;bottom:18px;padding:20px}
+      .route-card h2{font-size:30px}
+      .section{padding:72px 0}
+      .paper-section{
+        margin-left:-11px;
+        margin-right:-11px;
+        padding-left:11px;
+        padding-right:11px;
+      }
+
+      .passport-pages{grid-template-columns:1fr}
+      .passport-page{border-right:0;border-bottom:1px dashed rgba(27,23,16,.22)}
+      .passport-page:last-child{border-bottom:0}
+      .pastor-copy{padding:30px}
+      .pastor-img{min-height:420px}
+
+      .schedule-row{
+        grid-template-columns:1fr;
+      }
+
+      .schedule-row > div{
+        border-right:0;
+        border-bottom:1px solid var(--line);
+      }
+
+      .schedule-row > div:last-child{border-bottom:0}
+      .time{text-align:left}
+      .map{min-height:340px}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="texture"></div>
+
+  <a href="#home" class="brand-stamp">
+    <span class="brand-mark">十</span>
+    <span>
+      <b>순례길교회</b>
+      <span>PILGRIM WAY CHURCH</span>
+    </span>
+  </a>
+
+  <nav class="chapter-menu" id="chapterMenu">
+    <a href="#home" data-label="시작" class="active">00</a>
+    <a href="#about" data-label="교회소개">01</a>
+    <a href="#guide" data-label="처음 방문">02</a>
+    <a href="#pastor" data-label="담임목사">03</a>
+    <a href="#worship" data-label="예배안내">04</a>
+    <a href="#media" data-label="교회소식">05</a>
+    <a href="#location" data-label="오시는 길">06</a>
+  </nav>
+
+  <button class="mobile-menu-btn" type="button" onclick="openMenu()">메뉴</button>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-head">
+      <div class="brand-stamp" style="position:static;background:transparent;border:0;box-shadow:none;padding:0;">
+        <span class="brand-mark">十</span>
+        <span>
+          <b>순례길교회</b>
+          <span>PILGRIM WAY CHURCH</span>
+        </span>
+      </div>
+      <button class="close-btn" type="button" onclick="closeMenu()">닫기</button>
+    </div>
+
+    <div class="mobile-list">
+      <a href="#home" onclick="closeMenu()"><b>00</b><span>시작</span></a>
+      <a href="#about" onclick="closeMenu()"><b>01</b><span>교회소개</span></a>
+      <a href="#guide" onclick="closeMenu()"><b>02</b><span>처음 방문</span></a>
+      <a href="#pastor" onclick="closeMenu()"><b>03</b><span>담임목사</span></a>
+      <a href="#worship" onclick="closeMenu()"><b>04</b><span>예배안내</span></a>
+      <a href="#media" onclick="closeMenu()"><b>05</b><span>교회소식</span></a>
+      <a href="#location" onclick="closeMenu()"><b>06</b><span>오시는 길</span></a>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <section class="hero" id="home">
+      <div class="hero-copy reveal">
+        <span class="badge">PILGRIM EXPERIENCE</span>
+        <h1>믿음의 길을<br>함께 걷는<br>교회</h1>
+        <p>
+          순례길교회는 예배와 말씀, 공동체와 섬김을 통해
+          지친 영혼이 다시 하나님께로 향하는 여정을 함께 걷는 교회입니다.
+        </p>
+
+        <div class="actions">
+          <a href="#guide" class="btn primary">처음 방문 여정 보기</a>
+          <a href="#worship" class="btn">예배 시간 안내</a>
+        </div>
+      </div>
+
+      <div class="map-card reveal">
+        <div class="path-line">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M5,15 C22,18 22,35 42,38 C60,41 50,67 65,70 C78,74 78,83 91,84"
+              fill="none" stroke="#d8ad61" stroke-width="1.2" stroke-dasharray="4 3"/>
+          </svg>
+        </div>
+
+        <div class="route-card">
+          <small>THIS SUNDAY ROUTE</small>
+          <h2>예배 · 말씀 · 교제 · 파송</h2>
+          <p>주일 오전 11:00, 하나님께 나아가는 여정에 함께하세요.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section paper-section" id="about">
+      <div class="section-head reveal">
+        <div>
+          <div class="eyebrow">CHAPTER 01</div>
+          <h2>교회소개</h2>
+        </div>
+        <p class="lead">
+          순례길교회는 신앙을 목적지가 아닌 여정으로 이해합니다.
+          한 사람 한 사람이 하나님께 가까워지는 길을 함께 걷고, 넘어질 때 일으키며,
+          다시 믿음의 방향을 바라보게 하는 공동체입니다.
+        </p>
+      </div>
+
+      <div class="journey-grid reveal">
+        <div class="journey-card">
+          <span>WAYPOINT 01</span>
+          <h3>예배의 길</h3>
+          <p>하나님을 향한 예배가 모든 여정의 시작입니다. 찬양과 말씀, 기도 안에서 주님의 임재를 사모합니다.</p>
+        </div>
+
+        <div class="journey-card">
+          <span>WAYPOINT 02</span>
+          <h3>말씀의 길</h3>
+          <p>성경은 오늘의 길을 밝히는 등불입니다. 말씀을 배우고 삶에 적용하는 공동체를 세웁니다.</p>
+        </div>
+
+        <div class="journey-card">
+          <span>WAYPOINT 03</span>
+          <h3>동행의 길</h3>
+          <p>혼자 걷지 않도록 서로를 위해 기도하고, 다음세대와 지역사회를 함께 섬깁니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section paper-section" id="guide">
+      <div class="section-head reveal">
+        <div>
+          <div class="eyebrow">CHAPTER 02</div>
+          <h2>처음 방문<br>가이드</h2>
+        </div>
+        <p class="lead">
+          교회가 처음이거나 예배가 낯설어도 괜찮습니다.
+          순례길교회는 처음 오신 분이 자연스럽게 예배에 참여할 수 있도록 안내합니다.
+        </p>
+      </div>
+
+      <div class="passport reveal">
+        <div class="passport-photo"></div>
+
+        <div class="passport-book">
+          <div class="passport-top">
+            <b>FIRST VISIT PASSPORT</b>
+            <span>WELCOME</span>
+          </div>
+
+          <div class="passport-pages">
+            <div class="passport-page">
+              <h3>방문 전</h3>
+              <p>
+                편한 복장으로 오셔도 됩니다. 예배 시작 10분 전 도착하시면 안내팀의 도움을 받을 수 있습니다.
+              </p>
+              <div class="stamp-list">
+                <div class="stamp">예배 시간 확인</div>
+                <div class="stamp">오시는 길 확인</div>
+                <div class="stamp">주차 안내 확인</div>
+              </div>
+            </div>
+
+            <div class="passport-page">
+              <h3>방문 후</h3>
+              <p>
+                예배 후 새가족실에서 교회 소개를 듣고, 궁금한 점을 편하게 나눌 수 있습니다.
+              </p>
+              <div class="stamp-list">
+                <div class="stamp">예배실 안내</div>
+                <div class="stamp">새가족 등록</div>
+                <div class="stamp">공동체 연결</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section paper-section" id="pastor">
+      <div class="pastor">
+        <div class="pastor-img reveal"></div>
+
+        <div class="pastor-copy reveal">
+          <div class="eyebrow">CHAPTER 03</div>
+          <h2>담임목사<br>인사말</h2>
+          <div class="quote">“교회는 완벽한 사람들이 아니라, 은혜가 필요한 사람들이 함께 걷는 길입니다.”</div>
+          <p>
+            순례길교회 홈페이지를 방문해주신 여러분을 진심으로 환영합니다.
+            이곳에서 예배의 기쁨을 회복하고, 말씀 안에서 삶의 방향을 발견하며,
+            공동체 안에서 다시 일어나는 은혜를 경험하시길 축복합니다.
+          </p>
+          <div class="sign">담임목사 김순례</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section paper-section" id="worship">
+      <div class="section-head reveal">
+        <div>
+          <div class="eyebrow">CHAPTER 04</div>
+          <h2>예배안내</h2>
+        </div>
+        <p class="lead">
+          모든 예배는 누구에게나 열려 있습니다.
+          처음 방문하시는 분도 편안하게 함께하실 수 있습니다.
+        </p>
+      </div>
+
+      <div class="schedule reveal">
+        <div class="schedule-row">
+          <div class="day">SUN</div>
+          <div class="name">주일 1부 예배</div>
+          <div class="time">오전 9:00</div>
+        </div>
+        <div class="schedule-row">
+          <div class="day">SUN</div>
+          <div class="name">주일 2부 예배</div>
+          <div class="time">오전 11:00</div>
+        </div>
+        <div class="schedule-row">
+          <div class="day">WED</div>
+          <div class="name">수요기도회</div>
+          <div class="time">오후 7:30</div>
+        </div>
+        <div class="schedule-row">
+          <div class="day">DAWN</div>
+          <div class="name">새벽기도회</div>
+          <div class="time">화-금 오전 5:30</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section paper-section" id="media">
+      <div class="section-head reveal">
+        <div>
+          <div class="eyebrow">CHAPTER 05</div>
+          <h2>교회소식</h2>
+        </div>
+        <p class="lead">
+          주일설교와 찬양, 교회 소식을 한 곳에서 확인하세요.
+        </p>
+      </div>
+
+      <div class="media-grid reveal">
+        <div class="youtube">
+          <iframe src="https://www.youtube.com/embed/live_stream?channel=UC_x5XG1OV2P6uZZ5FSM9Ttw" allowfullscreen></iframe>
+        </div>
+
+        <div class="notice-list">
+          <a href="#" class="notice">
+            <b>새가족 환영 모임 안내</b>
+            <span>2026.04.27 · 주일 예배 후</span>
+          </a>
+          <a href="#" class="notice">
+            <b>믿음의 길 소그룹 신청</b>
+            <span>2026.04.20 · 온라인 신청</span>
+          </a>
+          <a href="#" class="notice">
+            <b>다음세대 여름수련회</b>
+            <span>2026.04.13 · 접수 중</span>
+          </a>
+          <a href="#" class="notice">
+            <b>주일 차량 운행 시간 변경</b>
+            <span>2026.04.06 · 셔틀 안내</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section paper-section" id="location">
+      <div class="section-head reveal">
+        <div>
+          <div class="eyebrow">CHAPTER 06</div>
+          <h2>오시는 길</h2>
+        </div>
+        <p class="lead">
+          처음 방문하시는 분도 편안히 오실 수 있도록 안내합니다.
+        </p>
+      </div>
+
+      <div class="location-grid">
+        <div class="map reveal">
+          <iframe src="https://maps.google.com/maps?q=Seoul%20Korea&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+        </div>
+
+        <div class="contact-card reveal">
+          <h3>순례길교회</h3>
+          <p>
+            주소: 서울특별시 은평구 은혜로 123<br>
+            전화: 02-123-4567<br>
+            이메일: church@example.com
+          </p>
+          <div class="actions">
+            <a href="#worship" class="btn primary">예배 시간 확인</a>
+            <a href="mailto:church@example.com" class="btn">문의하기</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <b>순례길교회</b><br>
+      Pilgrim Way Church · Copyright © 2026. All rights reserved.
+    </footer>
+  </main>
+
+  <script>
+    function openMenu(){
+      document.getElementById("mobileMenu").classList.add("open");
+    }
+
+    function closeMenu(){
+      document.getElementById("mobileMenu").classList.remove("open");
+    }
+
+    const revealObserver = new IntersectionObserver((entries)=>{
+      entries.forEach((entry)=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add("show");
+        }
+      });
+    },{threshold:0.13});
+
+    document.querySelectorAll(".reveal").forEach((el)=>revealObserver.observe(el));
+
+    const navLinks = document.querySelectorAll("#chapterMenu a");
+    const sections = document.querySelectorAll("main section[id], .hero[id]");
+
+    function setActive(){
+      let current = "home";
+
+      sections.forEach((section)=>{
+        const rect = section.getBoundingClientRect();
+        if(rect.top <= window.innerHeight * 0.42 && rect.bottom >= window.innerHeight * 0.42){
+          current = section.id;
+        }
+      });
+
+      navLinks.forEach((link)=>{
+        link.classList.toggle("active", link.getAttribute("href") === "#" + current);
+      });
+    }
+
+    window.addEventListener("scroll", setActive);
+    setActive();
+  </script>
+</body>
+</html>
